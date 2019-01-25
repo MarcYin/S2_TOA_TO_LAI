@@ -1,0 +1,37 @@
+package:                                                                                                                                                          
+  name: 
+  version: {{ environ['S2_TOA_TO_LAI_VERSION'] }}
+     
+source:
+  git_url: https://github.com/MarcYin/S2_TOA_TO_LAI.git
+  git_tag: master
+     
+build:
+  channels:
+    - anaconda
+    - conda-forge
+    - f0xy
+  script_env:
+    - VERSION
+    - CONDA_BLD_PATH
+     
+requirements:
+  host:
+    - siac
+  run:
+    - siac
+test:
+  commands:
+    - echo 'Hello world'
+about:
+  home: https://github.com/MarcYin/S2_TOA_TO_LAI.git
+  license: GNU Affero General Public License v3.0
+  license_family: AGPL
+  license_file: ''
+  summary:  From Sentinel 2 TOA to LAI
+  description: "From Sentinel 2 TOA to LAI"
+  doc_url: ''
+  dev_url: ''
+     
+extra:
+  recipe-maintainers: ''

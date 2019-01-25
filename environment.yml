@@ -1,0 +1,7 @@
+name: test-environment
+
+channels:
+  - conda-forge
+  - f0xy
+dependencies:
+  - siac
