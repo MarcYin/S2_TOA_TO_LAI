@@ -13,7 +13,7 @@ echo $CONDA_PACKAGE
 ls -lah $CONDA_BLD_PATH/$OS 
 ls -lah $CONDA_BLD_PATH/noarch
 #ls -lah ~/
-anaconda -t $CONDA_UPLOAD_TOKEN upload -u $USER $(CONDA_PACKAGE) --force
+anaconda -t $CONDA_UPLOAD_TOKEN upload -u $USER $CONDA_PACKAGE --force
 
 # Only need to change these two variables
 #PKG_NAME=siac
