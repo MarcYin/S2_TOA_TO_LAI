@@ -21,19 +21,10 @@ requirements:
     - python
     - conda-build >=2.1
     - gdal >=2.1,<2.4
-    - pip
-    - pip:
-      - siac
-      - lightgbm >=2.1.0
-      - gp_emulator
   run:
     - python
     - conda-build >=2.1
     - gdal >=2.1,<2.4
-    - pip:
-      - siac
-      - lightgbm >=2.1.0
-      - gp_emulator
 test:
   imports:
     - S2_TOA_TO_LAI
