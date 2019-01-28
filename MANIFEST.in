@@ -1,0 +1,4 @@
+include setup.py
+include S2_TOA_TO_LAI/*.py
+include S2_TOA_TO_LAI/data/*.npz
+include S2_TOA_TO_LAI/.scihub_auth
