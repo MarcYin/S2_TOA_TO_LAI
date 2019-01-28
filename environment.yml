@@ -2,6 +2,9 @@ name: test-environment
 
 channels:
   - conda-forge
-  - f0xy
 dependencies:
-  - siac
+  - pip
+  - pip:              
+    - siac            
+    - lightgbm >=2.1.0
+    - gp_emulator
