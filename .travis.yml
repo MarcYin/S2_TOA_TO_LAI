@@ -32,7 +32,6 @@ deploy:
   user: $PYPI_USER
   password: $PYPI_PASS
   on:
-#    tags: true
     branch: master
 after_success:
   - bash conda_upload.sh
