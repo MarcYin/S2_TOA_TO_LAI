@@ -32,7 +32,7 @@ script:
   #Killing background sleep loop                              
   - kill %1                                                   
   #- coverage xml                                             
-  - export S2_TOA_TO_LAI_VERSION=v1.0.0 #$TRAVIS_TAG 
+  - export S2_TOA_TO_LAI_VERSION=v1.0.1 #$TRAVIS_TAG 
 deploy:
   provider: pypi
   user: $PYPI_USER
