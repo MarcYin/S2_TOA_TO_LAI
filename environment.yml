@@ -3,7 +3,6 @@ name: test-environment
 channels:
   - conda-forge
 dependencies:
-  - pip
   - pip:              
     - siac            
     - lightgbm >=2.1.0
