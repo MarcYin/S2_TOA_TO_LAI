@@ -3,7 +3,5 @@ name: test-environment
 channels:
   - conda-forge
 dependencies:
-  - pip:              
-    - siac            
-    - lightgbm >=2.1.0
-    - gp_emulator
+  - python
+  - gdal >=2.1,<2.4
