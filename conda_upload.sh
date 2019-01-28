@@ -7,9 +7,9 @@ conda config --set anaconda_upload no
 export CONDA_BLD_PATH=~/conda-bld 
 export VERSION=$S2_TOA_TO_LAI_VERSION
 #conda build --output . -c conda-forge
+conda build .
 export CONDA_PACKAGE=`conda build --output . | grep bz2`
-#conda build .
-#echo $CONDA_PACKAGE
+echo $CONDA_PACKAGE
 ls -lah $CONDA_BLD_PATH/$OS 
 ls -lah $CONDA_BLD_PATH/noarch
 #ls -lah ~/
