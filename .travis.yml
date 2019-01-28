@@ -22,7 +22,7 @@ install:
 script:                                                       
   # Output something every 10 minutes or Travis kills the job 
   - while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
-  - py.test -s --cov                                         
+  #- py.test -s --cov                                         
   #Killing background sleep loop                              
   - kill %1                                                   
   #- coverage xml                                             
