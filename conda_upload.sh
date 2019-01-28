@@ -11,7 +11,7 @@ export VERSION=$S2_TOA_TO_LAI_VERSION
 conda build .
 #echo $CONDA_PACKAGE
 ls -lah $CONDA_BLD_PATH/$OS 
-ls -lah $CONDA_BLD_PATH
+ls -lah $CONDA_BLD_PATH/noarch
 ls -lah ~/
 anaconda -t $CONDA_UPLOAD_TOKEN upload -u $USER $(ls $CONDA_BLD_PATH/noarch/$PKG_NAME-$VERSION*.tar.bz2) --force
 
