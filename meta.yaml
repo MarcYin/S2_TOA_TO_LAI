@@ -1,5 +1,5 @@
 package:
-  name: toa2lai
+  name: s2-toa-to-lai
   version: {{ environ['S2_TOA_TO_LAI_VERSION'] }}
      
 source:
