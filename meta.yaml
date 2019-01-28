@@ -3,8 +3,8 @@ package:
   version: {{ environ['S2_TOA_TO_LAI_VERSION'] }}
      
 source:
-  url: https://github.com/MarcYin/S2_TOA_TO_LAI/archive/master.zip
-     
+  path: ./
+
 build:
   script: python setup.py install  --single-version-externally-managed --record=record.txt
   noarch: generic
