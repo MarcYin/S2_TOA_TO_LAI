@@ -13,7 +13,7 @@ conda build .
 ls -lah $CONDA_BLD_PATH/$OS 
 ls -lah $CONDA_BLD_PATH
 ls -lah ~/
-anaconda -t $CONDA_UPLOAD_TOKEN upload -u $(ls $CONDA_BLD_PATH/noarch/$PKG_NAME-$VERSION*.tar.bz2) --force
+anaconda -t $CONDA_UPLOAD_TOKEN upload -u $USER $(ls $CONDA_BLD_PATH/noarch/$PKG_NAME-$VERSION*.tar.bz2) --force
 
 # Only need to change these two variables
 #PKG_NAME=siac
