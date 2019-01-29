@@ -10,6 +10,8 @@ matrix:
 install:
   - sudo apt-get update
   - echo $TRAVIS_PYTHON_VERSION
+script:
+  - export S2_TOA_TO_LAI_VERSION=$TRAVIS_TAG
 deploy:
   provider: pypi
   user: $PYPI_USER
