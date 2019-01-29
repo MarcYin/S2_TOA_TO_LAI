@@ -100,12 +100,14 @@ def do_lai(fnames):
     gp =  gp_emulator.GaussianProcess(emulator_file=file_path + '/data/Third_inv_gp.npz')
     lais = []
     for fname in fnames:
-        if len(glob(fname+'/GRANULE/*/IMG_DATA/lai.tif')) ==0:
+        if (len(glob(fname+'/GRANULE/*/IMG_DATA/lai.tif')) == 0) & (len(glob(fname+'/GRANULE/*/IMG_DATA/BOA_RGB.tif')) > 0):
             boa = read_boa(fname)
             lai = pred_lai(boa, comps, gp, AAT)
             lai_name = save_lai(lai, fname)
             lais.append(lai_name)
-        else:
+        elif len(glob(fname+'/GRANULE/*/IMG_DATA/BOA_RGB.tif')) == 0:
+            logger.error('Atmospheric correction has been done for %s, so no LAI inversion.'%fname.split('/')[-1])
+        elif len(glob(fname+'/GRANULE/*/IMG_DATA/lai.tif')) > 0:
             logger.info('%s LAI inversion has been done and skipped.'%fname.split('/')[-1])
             lai_name = glob(fname+'/GRANULE/*/IMG_DATA/lai.tif')[0]
             lais.append(lai_name)
@@ -185,10 +187,10 @@ def do_ac(fnames):
         if len(glob(fname+'/GRANULE/*/IMG_DATA/BOA_RGB.tif')) ==0:
             cmd = ['python', SIAC_S2_file, '-f', fname]
             if sys.version_info >= (3,0):
-                ret = run_ac_timer_py3(cmd, 3600)
+                run_ac_timer_py3(cmd, 3600)
             else:
-                ret = run_ac_timer_py2(cmd, 3600)
-            if ret ==1:
+                run_ac_timer_py2(cmd, 3600)
+            if len(glob(fname+'/GRANULE/*/IMG_DATA/BOA_RGB.tif')) > 0:
                 corrected.append(fname)
         else:
             logger.info('%s has been corrected and skipped.'%fname.split('/')[-1])
@@ -198,14 +200,10 @@ def do_ac(fnames):
 def run_ac_timer_py3(cmd, timeout_sec):
     try:                       
         subprocess.run(cmd, timeout=timeout_sec)
-        ret = 1
     except subprocess.TimeoutExpired:
         logger.error('%s ran too long and is killed'%fname.split('/')[-1])
-        ret = 0
     except:                    
         logger.error('%s errored during processing'%name.split('/')[-1])
-        ret = 0
-    return ret
 
 def run_ac_timer_py2(cmd, timeout_sec):
     proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
@@ -213,9 +211,6 @@ def run_ac_timer_py2(cmd, timeout_sec):
     try:
         timer.start()
         stdout, stderr = proc.communicate()
-        ret = 1
     finally:
         logger.error('%s errored during processing'%name.split('/')[-1])
         timer.cancel()
-        ret = 0
-    return ret

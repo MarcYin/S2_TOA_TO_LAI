@@ -4,7 +4,7 @@ from setuptools import setup
 try:                
     version = os.environ['S2_TOA_TO_LAI_VERSION']
 except:             
-    version = '1.0.0'                                                                                                                          
+    version = '1.0.2'                                                                                                                          
                     
 with open('README.md', 'rb') as f:
     readme = f.read().decode()
