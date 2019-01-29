@@ -100,10 +100,15 @@ def do_lai(fnames):
     gp =  gp_emulator.GaussianProcess(emulator_file=file_path + '/data/Third_inv_gp.npz')
     lais = []
     for fname in fnames:
-        boa = read_boa(fname)
-        lai = pred_lai(boa, comps, gp, AAT)
-        lai_name = save_lai(lai, fname)
-        lais.append(lai_name)
+        if len(glob(fname+'/GRANULE/*/IMG_DATA/lai.tif')) ==0:
+            boa = read_boa(fname)
+            lai = pred_lai(boa, comps, gp, AAT)
+            lai_name = save_lai(lai, fname)
+            lais.append(lai_name)
+        else:
+            logger.info('%s LAI inversion has been done and skipped.'%fname.split('/')[-1])
+            lai_name = glob(fname+'/GRANULE/*/IMG_DATA/lai.tif')[0]
+            lais.append(lai_name)
     logger.info('Done!')
     return lais
 
