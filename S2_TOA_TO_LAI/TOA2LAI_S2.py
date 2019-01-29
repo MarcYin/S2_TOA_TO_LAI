@@ -71,7 +71,7 @@ def downloader(url_fname):
             logger.error(r.content)
 
 def TOA2LAI_S2(aoi = '', tiles = '', latlon = None, start = '2015-12-01', end = now, cloud_cover = 100, s2_file_dir = home + '/S2_data'):
-    logger.propagate = False
+    #logger.propagate = False
     rets = find_S2_files(aoi = aoi, tiles = tiles, latlon = latlon, start = start, end =end, cloud_cover = cloud_cover, one_by_one=True, band = None)
     if os.path.realpath(s2_file_dir) in os.path.realpath(home + '/S2_data'):
         if not os.path.exists(home + '/S2_data'):
@@ -106,7 +106,7 @@ def do_lai(fnames):
             lai_name = save_lai(lai, fname)
             lais.append(lai_name)
         elif len(glob(fname+'/GRANULE/*/IMG_DATA/BOA_RGB.tif')) == 0:
-            logger.error('Atmospheric correction has been done for %s, so no LAI inversion.'%fname.split('/')[-1])
+            logger.error('Atmospheric correction has not been done for %s, so no LAI inversion.'%fname.split('/')[-1])
         elif len(glob(fname+'/GRANULE/*/IMG_DATA/lai.tif')) > 0:
             logger.info('%s LAI inversion has been done and skipped.'%fname.split('/')[-1])
             lai_name = glob(fname+'/GRANULE/*/IMG_DATA/lai.tif')[0]
@@ -192,6 +192,8 @@ def do_ac(fnames):
                 run_ac_timer_py2(cmd, 3600)
             if len(glob(fname+'/GRANULE/*/IMG_DATA/BOA_RGB.tif')) > 0:
                 corrected.append(fname)
+            else:
+                logger.error('Atmospheric correction has failed for %s'%fname.split('/')[-1])
         else:
             logger.info('%s has been corrected and skipped.'%fname.split('/')[-1])
             corrected.append(fname)
