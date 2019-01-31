@@ -28,7 +28,7 @@ pip install S2-TOA-TO-LAI
 ```  
 3. Using anaconda from anaconda for 'better' package managements                               
 ```bash                               
-conda install -c f0xy -c conda-forge siac
+conda install -c f0xy -c conda-forge s2-toa-to-lai
 ``` 
 
 To save your time for installing GDAL:             
