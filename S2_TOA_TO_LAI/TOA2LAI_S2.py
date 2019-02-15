@@ -187,9 +187,9 @@ def do_ac(fnames):
         if len(glob(fname+'/GRANULE/*/IMG_DATA/BOA_RGB.tif')) ==0:
             cmd = ['python', SIAC_S2_file, '-f', fname]
             if sys.version_info >= (3,0):
-                run_ac_timer_py3(cmd, 3600)
+                run_ac_timer_py3(cmd, 3600, fname)
             else:
-                run_ac_timer_py2(cmd, 3600)
+                run_ac_timer_py2(cmd, 3600, fname)
             if len(glob(fname+'/GRANULE/*/IMG_DATA/BOA_RGB.tif')) > 0:
                 corrected.append(fname)
             else:
@@ -199,20 +199,20 @@ def do_ac(fnames):
             corrected.append(fname)
     return corrected
 
-def run_ac_timer_py3(cmd, timeout_sec):
+def run_ac_timer_py3(cmd, timeout_sec, fname):
     try:                       
         subprocess.run(cmd, timeout=timeout_sec)
     except subprocess.TimeoutExpired:
         logger.error('%s ran too long and is killed'%fname.split('/')[-1])
     except:                    
-        logger.error('%s errored during processing'%name.split('/')[-1])
+        logger.error('%s errored during processing'%fname.split('/')[-1])
 
-def run_ac_timer_py2(cmd, timeout_sec):
+def run_ac_timer_py2(cmd, timeout_sec, fname):
     proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
     timer = Timer(timeout_sec, proc.kill)
     try:
         timer.start()
         stdout, stderr = proc.communicate()
     finally:
-        logger.error('%s errored during processing'%name.split('/')[-1])
+        logger.error('%s errored during processing'%fname.split('/')[-1])
         timer.cancel()
