@@ -26,8 +26,8 @@ install:
   - pip install coveralls codecov
   - conda list
 
-#script:
-#  - export S2_TOA_TO_LAI_VERSION=$TRAVIS_TAG
+script:
+  - export S2_TOA_TO_LAI_VERSION=1.0.3
 deploy:
   provider: pypi
   user: $PYPI_USER
