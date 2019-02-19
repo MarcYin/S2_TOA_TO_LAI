@@ -24,10 +24,9 @@ install:
   - source activate test-environment
   - conda info -a
   - pip install coveralls codecov
-  - conda list
 
 script:
-  - export S2_TOA_TO_LAI_VERSION=1.0.3
+  -  conda list 
 deploy:
   provider: pypi
   user: $PYPI_USER

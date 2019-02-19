@@ -1,10 +1,12 @@
-import os           
-from setuptools import setup
-                    
-try:                
-    version = os.environ['S2_TOA_TO_LAI_VERSION']
-except:             
-    version = '1.0.3'
+import os                                             
+from setuptools import setup                          
+file_path = os.path.dirname(os.path.realpath(__file__))
+                                                      
+try:                                                  
+    version = os.environ['S2_TOA_TO_LAI_VERSION']              
+except:                                               
+    version_file = open(os.path.join(file_path, 'S2_TOA_TO_LAI/VERSION'), 'rb')
+    version = version_file.read().decode().strip()   
                     
 with open('README.md', 'rb') as f:
     readme = f.read().decode()
