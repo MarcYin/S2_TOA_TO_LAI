@@ -163,7 +163,7 @@ def pred_lai(boa, comps, gp, AAT):
     lai = []
     num_threads = np.minimum(12, cpu_count())
     for val_val in np.array_split(val_vals, 20, axis=1):
-        p = Pool(num_threads)
+        #p = Pool(num_threads)
         par = partial(do_pred, comps = comps, gp = gp, AAT=AAT)
         ret = list(map(par, np.array_split(val_val, num_threads, axis=1)))
         for i in ret:
