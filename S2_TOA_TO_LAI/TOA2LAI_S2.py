@@ -24,6 +24,7 @@ from S2_TOA_TO_LAI.create_logger import create_logger
 home = expanduser("~")
 file_path = os.path.dirname(os.path.realpath(__file__))
 logger = create_logger()
+logger.propagate = True
 SIAC_S2_file = SIAC_S2.__globals__['__file__']
 
 username, password = np.loadtxt(file_path + '/.scihub_auth', dtype=str)
@@ -164,7 +165,7 @@ def pred_lai(boa, comps, gp, AAT):
     for val_val in np.array_split(val_vals, 20, axis=1):
         p = Pool(num_threads)
         par = partial(do_pred, comps = comps, gp = gp, AAT=AAT)
-        ret = p.map(par, np.array_split(val_val, num_threads, axis=1))
+        ret = list(map(par, np.array_split(val_val, num_threads, axis=1)))
         for i in ret:
             lai +=i.tolist()
     lai_map = np.copy(boa[0])
