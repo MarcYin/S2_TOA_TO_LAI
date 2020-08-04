@@ -2,3 +2,5 @@
 *.pyc
 *__pycache__*
 *.swp
+S2_TOA_TO_LAI.egg-info
+*.ipynb_checkpoints
