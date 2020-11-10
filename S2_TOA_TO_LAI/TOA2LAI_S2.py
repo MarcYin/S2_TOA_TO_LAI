@@ -52,13 +52,107 @@ def TOA2LAI_S2(aoi = None,
          AC_LAI(s2TileDir, mcd43 = mcd43, vrt_dir = vrt_dir, jasmin=jasmin, aoi=processingAOI)
 
     return s2TileDirs
- 
+
+def summeryJson(dest):
+    # where dest is the S2 IMG_DATA directory 
+    B02 = glob(os.path.join(dest, '*B02_sur.tif'))[0]
+
+    bNames = ['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B10', 'B11', 'B12']
+
+    header = '/'.join(B02.split('/')[:-5]) + '/'
+
+    imgs = []
+    imgUncs = []
+    for band in bNames:
+        ff = glob(B02.replace('B02_sur.tif', band + '_sur.tif'))
+        imgs.append(ff[0].replace(header, ''))
+
+        ff = glob(B02.replace('B02_sur.tif', band + '_sur_unc.tif'))
+        imgUncs.append(ff[0].replace(header, ''))
+
+    viewAngles = []
+    for band in bNames:
+        ff = glob(dest.replace('IMG_DATA', 'ANG_DATA/VAA_VZA_' + band + '.tif'))
+        viewAngles.append(ff[0].replace(header, ''))
+
+    ff = glob(dest.replace('IMG_DATA', 'cloud.tif'))
+    cloud = ff[0].replace(header, '')
+
+    ff = glob(dest.replace('IMG_DATA', 'ANG_DATA/SAA_SZA.tif'))
+    sunAngles = ff[0].replace(header, '')
+
+    boaFull = (dest + '/BOA_RGB.tif').replace(header, '')
+    toaFull = (dest + '/TOA_RGB.tif').replace(header, '')
+
+    boaOvrs = [dest.replace(header, '') + '/BOA_ovr_large.png', 
+               dest.replace(header, '') + '/BOA_ovr_medium.png', 
+               dest.replace(header, '') + '/BOA_ovr_small.png']
+    toaOvrs = [dest.replace(header, '') + '/TOA_ovr_large.png', 
+               dest.replace(header, '') + '/TOA_ovr_medium.png', 
+               dest.replace(header, '') + '/TOA_ovr_small.png']
+
+
+    atmoBands = ['aot', 'tcwv', 'tco3']
+    atmoParas = []
+    atmoParasUncs = []
+
+    for band in atmoBands:
+        ff = glob(B02.replace('B02_sur.tif', band + '.tif'))
+        atmoParas.append(ff[0].replace(header, ''))
+
+        ff = glob(B02.replace('B02_sur.tif', band + '_unc.tif'))
+        atmoParasUncs.append(ff[0].replace(header, ''))
+
+    ff = glob(dest.replace('IMG_DATA', 'SIAC_S2.log'))
+    siacLog =  ff[0]
+
+    ff = glob(dest + '/AOI.json')
+    aoi =  ff[0]
+
+    with open(aoi, 'r') as f:
+        txt = json.load(f)
+    txt['name'] = 'SIAC outputs'
+
+    with open(siacLog, 'r') as f:
+        logstr = f.read().split('\n')
+        version = logstr[0].split(' - ')[1]
+        for i in logstr:
+            if 'Clean pixel percentage' in i:
+                CleanPixelPercentage = float(i.split('Clean pixel percentage: ')[1])
+            if 'Valid pixel percentage' in i:
+                ValidPixelPercentage = float(i.split('Valid pixel percentage: ')[1])
+
+    txt.update({'Version': version, 
+                'CleanPixelPercentage': CleanPixelPercentage,
+                'ValidPixelPercentage': ValidPixelPercentage
+            })
+    txt['features'][0].update({'aoi': aoi.replace(header, ''), 
+                                'siacLog': siacLog.replace(header, ''),
+                                'toaOvrs': toaOvrs,
+                                'boaOvrs': boaOvrs,
+                                'toaOvrFull': toaFull,
+                                'boaOvrFull': boaFull,
+                                'viewAngles': viewAngles, 
+                                'sunAngles': sunAngles,
+                                'SurfaceReflectance': imgs,
+                                'SurfaceReflectanceUncertainty': imgUncs,
+                                'atmoParas': atmoParas,
+                                'atmoParasUncs': atmoParasUncs,
+                                'cloud': cloud
+                            })
+    
+    s2_tile_dir = '/'.join(dest.split('/')[:-3])
+    with open(s2_tile_dir + '/siac_output.json', 'w') as f:
+        json.dump(txt, f, ensure_ascii=False, indent=4)
+        
 def AC_LAI(fname, mcd43 = '~/MCD43/',vrt_dir = '~/MCD43_VRT/', jasmin=False, aoi = None, ):
     '''
     jasmin is only for UK jasmin computing platform
     '''
     siacJson = os.path.join(fname, 'siac_output.json')
-    if not os.path.exists(siacJson):
+    B02 = glob(os.path.join(fname, '/GRANULE/*/IMG_DATA/*B02_sur.tif'))
+    
+    if len(B02) == 0:
         SIAC_S2(fname, 
                 send_back = False, 
                 mcd43     = mcd43 , 
@@ -68,7 +162,9 @@ def AC_LAI(fname, mcd43 = '~/MCD43/',vrt_dir = '~/MCD43_VRT/', jasmin=False, aoi
                ) 
     else:
         logger.info('Atmospheric correction has been done for %s'%(os.path.basename(fname)))
-    
+        if not os.path.exists(siacJson):
+            summeryJson(os.path.dirname(B02[0]))
+            
     with open(siacJson, 'r') as f:
         siacOutput = json.load(f)
     surRefs = siacOutput['features'][0]['SurfaceReflectance']
